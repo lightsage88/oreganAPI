@@ -6,6 +6,8 @@ const passport = require('passport');//passport is the backbone of our security 
 const bodyParser = require('body-parser');//should we need to use it, this will let us sniff out data from promises and turn it into json
 const app = express();
 
+const {router: usersRouter} = require('./users');
+const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 mongoose.Promise = global.Promise;
 const {PORT, DATABASE_URL} = require('./config');
 
@@ -30,7 +32,7 @@ passport.use(jwtStrategy);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 
-const jwt = passport.authenticate('jwt', {session: false});
+const jwtAuth = passport.authenticate('jwt', {session: false});
 
 app.get('/api/protected', jwtAuth, (req,res)=>{
 	return res.json({

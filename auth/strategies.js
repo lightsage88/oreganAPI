@@ -7,7 +7,7 @@ const {JWT_SECRET} = require('../config');
 
 const localStrategy = new LocalStrategy((emailAddress, password, callback)=>{
 	let user;
-	User.findOne({emailAddress: emailAddress})
+	User.findOne({username: username})
 		.then(_user=>{
 			user = _user;
 			if(!user) {

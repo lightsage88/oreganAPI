@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 
 router.post('/', jsonParser, (req,res)=>{
 	console.log('running our bland post');
-	const requiredFields = ['emailAddress', 'password'];
+	const requiredFields = ['username', 'emailAddress', 'password'];
 	const missingField = requiredFields.find(field => !(field in req.body));
 
 	if(missingField) {
@@ -22,7 +22,7 @@ router.post('/', jsonParser, (req,res)=>{
 		});
 	}
 
-	const stringFields = ['emailAddress', 'password', 'firstName', 'lastName', 'cellNumber'];
+	const stringFields = ['username', 'emailAddress', 'password', 'firstName', 'lastName', 'cellNumber'];
 	const nonStringField = stringFields.find(
 		field => field in req.body && typeof req.body[field] !== 'string'
 		);
@@ -35,7 +35,7 @@ router.post('/', jsonParser, (req,res)=>{
 			});
 		}
 
-		const explicityTrimmedFields = ['emailAddress', 'password'];
+		const explicityTrimmedFields = ['username', 'emailAddress', 'password'];
 		const nonTrimmedField = explicityTrimmedFields.find(field=>req.body[field].trim() !== req.body[field]);
 	if(nonTrimmedField) {
 		return res.status(422).json({
@@ -71,18 +71,18 @@ router.post('/', jsonParser, (req,res)=>{
 		});
 	}
 
-	let {emailAddress, password, firstName, lastName, cellNumber} = req.body;
+	let {username, emailAddress, password, firstName, lastName, cellNumber} = req.body;
 	console.log(req.body);
 	console.log(emailAddress);
-	return User.find({emailAddress})
+	return User.find({username})
 		.count()
 		.then(function(count){
 			if(count>0) {
 				return Promise.reject({
 					code: 422,
 					reason: 'ValidationError',
-					message: 'This email address has already been used!',
-					location: 'emailAddress'
+					message: 'This username has already been used!',
+					location: 'username'
 				});
 			}
 
@@ -92,6 +92,7 @@ router.post('/', jsonParser, (req,res)=>{
 			console.log('hashing away');
 			console.log(hash);
 			return User.create({
+				username,
 				emailAddress,
 				password: hash,
 				firstName,
@@ -174,6 +175,18 @@ router.put('/', jsonParser, function(req, res){
 				console.log(err);
 				console.error(err);
 			});
+});
+
+router.post('/persist', jsonParser, (req,res)=>{
+	let {_id} = req.body;
+	User.findOne(
+		{'_id': _id}
+		)
+	.then((response)=>{
+		console.log(response);
+		res.status(202).json(response);
+	})
+
 });
 
 

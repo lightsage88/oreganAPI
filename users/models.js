@@ -4,7 +4,17 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const UserSchema = mongoose.Schema({
+	// username: {
+	// 	type: String,
+	// 	require: true,
+	// 	unique: true
+	// },
 	emailAddress: {
+		type: String,
+		require: true,
+		unique: true
+	},
+	username: {
 		type: String,
 		require: true,
 		unique: true
@@ -32,6 +42,7 @@ const UserSchema = mongoose.Schema({
 UserSchema.methods.apiRepr = function(){
 	return {
 		id: this.id,
+		username: this.username || '',
 		emailAddress: this.emailAddress || '',
 		firstName: this.firstName || '',
 		lastName: this.lastName || '',

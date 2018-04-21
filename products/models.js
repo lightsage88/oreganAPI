@@ -31,6 +31,10 @@ const ProductSchema = mongoose.Schema({
 	productStock: {
 		type: Number,
 		require: true
+	},
+	productType:{
+		type: String,
+		require: true
 	}
 });
 
@@ -43,7 +47,8 @@ ProductSchema.methods.apiRepr = function(){
 		productRating: this.productRating || '',
 		productPrice: this.productPrice || '',
 		shippingPrice: this.shippingPrice || '',
-		productStock: this.productStock || ''
+		productStock: this.productStock || '',
+		productType: this.productType || ''
 	}
 }
 

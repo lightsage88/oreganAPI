@@ -6,7 +6,7 @@ const jsonParser = bodyParser.json();
 
 router.post('/addProduct', jsonParser, (req,res)=>{
 	console.log('adding a product');
-	let {companyName, productName, productDescription, productRating, productPrice, shippingPrice, productStock} = req.body;
+	let {companyName, productName, productDescription, productRating, productPrice, shippingPrice, productStock, productType} = req.body;
 	return Product.create({
 		companyName,
 		productName,
@@ -14,7 +14,8 @@ router.post('/addProduct', jsonParser, (req,res)=>{
 		productRating,
 		productPrice,
 		shippingPrice,
-		productStock
+		productStock,
+		productType
 	})
 	.then(function(product){
 		return res.status(201).json(product.apiRepr());
@@ -26,6 +27,22 @@ router.post('/addProduct', jsonParser, (req,res)=>{
 			code: 666,
 			message: 'Demons have messed things up'
 		});
+	});
+});
+
+router.post('/retrieve', jsonParser, (req,res)=>{
+	let {productType} = req.body
+	console.log(productType);
+	return Product.find({'productType': productType})
+	.then(function(products){
+		let set = [];
+		for(let i = 0; i<=products.length-1; i++) {
+			set.push(products[i].apiRepr());
+		}
+		return res.status(202).json(set);
+	})
+	.catch(function(err){
+		return res.status(606).json({message: 'searchProblem'});
 	});
 });
 

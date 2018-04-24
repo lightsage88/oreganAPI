@@ -97,7 +97,9 @@ router.post('/', jsonParser, (req,res)=>{
 				password: hash,
 				firstName,
 				lastName,
-				cellNumber
+				cellNumber,
+				cart,
+				pastPurchases
 			});
 		})
 		.then(function(user){
@@ -187,6 +189,24 @@ router.post('/persist', jsonParser, (req,res)=>{
 		res.status(202).json(response);
 	})
 
+});
+
+router.put('/itemIntoCart', jsonParser, (req, res)=>{
+	console.log('itemintocart running..');
+	let {_id, item} = req.body;
+	console.log(_id);
+	console.log(item);
+	let pick;
+	pick = Object.assign({}, [item]);
+
+	User.updateOne(
+		{_id},
+		{$addToSet: {cart: pick} }
+	)
+	.then((response)=>{
+		console.log(response);
+		res.status(202).json(response);
+	})
 });
 
 

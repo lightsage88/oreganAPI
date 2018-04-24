@@ -3,7 +3,7 @@ node_js: node
 deploy:
   provider: heroku
   api_key:
-    secure: BWvLfmveLa+8uC6LMY11jLUbOwJS2ud6GonLDJuBChasK7CxpSLZOJrApox5h88pwjVAM4UEbH2zJ0plpOW/lhgyiAAL8Vfv+10fsYI+ARfvdLjohLd9s1Ly++AAjWRM6IU1JNNCpN+6pF+1wvjTd5oPcs5ru9KwhQ0LdplRqf7ccgX8KcTLmwWZCuoOfSdmTvE1bsSb398wWF5W38efWmjNyAhD2BhYo6bP7Zj7tcNOrvR+HFSIE7WKn8v7UhW4JVK0zVniqTgUnwUEJ8b5fOIRH9K5zor9k+rNKQK8KiDYP47GUvyGU0snJmTcSz0iBBK6fprNtY8tbPI/G6LLyVtYHMhMqjJxFlgkzQWgVn1pdANy7UIeJLbH6IJEzIVdKW3FyydRptWYkC0DMtAMuF820wdBCPZQ4kjJS/gn64ZCI51EPlArwHb6jx8bFbxwaV0IGWUgOBBa46/aCSF+DCmOzkvKkrFAcylbWK4ikWbMLVtRu2j2Gk0882uH6z4uL+IophaMfbSdKNUP962Dvx6IYT3IaZoNc1bnl3x+m6M6vsypSW7C71KpotOZvW+JLghDDrd8/hLMejtMaCqbuJPcijC9/EIckDbv7zf17FCZW3jND60ahsV8rujGY6pwLNDQvR+xkf6UoDG6y2GpDkrQj0oKpYq65auMKZgv3/8=
+    secure: 1d3439cc-0634-4b97-be9a-a3e053b03b76
   app: protected-bastion-38106
   on:
     repo: lightsage88/oreganAPI

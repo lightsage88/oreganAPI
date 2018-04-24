@@ -186,7 +186,7 @@ router.post('/persist', jsonParser, (req,res)=>{
 		)
 	.then((response)=>{
 		console.log(response);
-		res.status(202).json(response);
+		return res.status(202).json(response);
 	})
 
 });
@@ -194,8 +194,45 @@ router.post('/persist', jsonParser, (req,res)=>{
 router.put('/itemIntoCart', jsonParser, (req, res)=>{
 	console.log('itemintocart running..');
 	let {_id, item} = req.body;
-	console.log(_id);
 	console.log(item);
+	let productTag = item[1].id;
+	let incomingQuantity = item[0];
+	let stock = Number(item[1].productStock);
+	
+	if(incomingQuantity > stock) {
+		console.log('incomingQuantity is too big!!');
+		return res.status(444).json({
+			code: 444,
+			reason: 'QuantityError',
+			message: 'That is too many!'});
+
+	} else {
+	//need to find the current cart in mLab, see if the product already exists
+	//if so, we need to REPLACE the quantities
+	User.findOne({_id})
+	.then(response =>{
+		console.log('here is the response');
+		console.log(response);
+		let userCart = response.cart;
+		console.log(userCart);
+		console.log(userCart.length);
+		// console.log(userCart[1][0][1].id);
+
+		//is this      the right length?
+		for(let i = 0; i<=userCart.length-1; i++) {
+			if(userCart[i][0][1].id === productTag) {
+				console.log('we found a match');
+				console.log(productTag);
+				console.log(userCart[i]);
+
+			} else {
+				console.log('no matches found');
+			}
+		}
+	});
+
+
+
 	let pick;
 	pick = Object.assign({}, [item]);
 
@@ -207,6 +244,7 @@ router.put('/itemIntoCart', jsonParser, (req, res)=>{
 		console.log(response);
 		res.status(202).json(response);
 	})
+}
 });
 
 

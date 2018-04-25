@@ -6,6 +6,9 @@ const ProductSchema = mongoose.Schema({
 	//image: {
 	// 	who knows???
 	// },
+	quantityOrdered: {
+		type: Number
+	},
 	companyName: {
 		type: String
 	},
@@ -41,6 +44,7 @@ const ProductSchema = mongoose.Schema({
 ProductSchema.methods.apiRepr = function(){
 	return {
 		id: this.id,
+		quantityOrdered: this.quantityOrdered || '',
 		companyName: this.companyName || '',
 		productName: this.productName || '',
 		productDescription: this.productDescription || '',

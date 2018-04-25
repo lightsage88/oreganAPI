@@ -6,8 +6,9 @@ const jsonParser = bodyParser.json();
 
 router.post('/addProduct', jsonParser, (req,res)=>{
 	console.log('adding a product');
-	let {companyName, productName, productDescription, productRating, productPrice, shippingPrice, productStock, productType} = req.body;
+	let {quantityOrdered, companyName, productName, productDescription, productRating, productPrice, shippingPrice, productStock, productType} = req.body;
 	return Product.create({
+		quantityOrdered,
 		companyName,
 		productName,
 		productDescription,

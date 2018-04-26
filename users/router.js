@@ -190,83 +190,47 @@ router.post('/persist', jsonParser, (req,res)=>{
 	})
 
 });
-//////////////////////////////
-router.put('/itemIntoCart', jsonParser, (req, res)=>{
-let number;
-function firstCartItem(){
-console.log('firstCartItem running...');
 
-console.log(cart);
-console.log('BREAAAAAAk');
-console.log(item);
-console.log(cart.length);
-
-for(let i = 0; i<=cart.length-1; i++){
-	if(cart[i].id === item.id){
-		console.log('doppelganger');
-		console.log(i);
-		number = i;
-		User.update({_id:userid}, {$set: `cart.${i}: ${item}` })
-		
-		
-	} else {
-	User.updateOne({'_id': userid}, {$addToSet: {cart: item	}})
-		.then(response=>{
+router.put('/itemIntoCart', jsonParser, (req,res)=>{
+	let {cart, userid, pageType} = req.body;
+	User.update({'_id':userid}, {$set: {'cart':cart}})
+	.then(response=>{
 		console.log(response);
-		res.status(202).json(response);
+		res.status(202).json(response);	
 	});
-	}
-}
-
-
-	// User.updateOne({'_id': userid}, {$addToSet: {cart: item	}})
-	// 	.then(response=>{
-	// 	console.log(response);
-	// 	res.status(202).json(response);
-	// });
-}
-
-console.log('itemintocart running..');
-let {cart, cartLength, pageType, userid, quantityOrdered, companyName, id, productDescription,productName,productPrice, shippingPrice, productRating, productStock, productType} = req.body;
-let item = {quantityOrdered, companyName,id,productDescription,productName,productPrice,shippingPrice,productRating,productStock,productType};
-
-	firstCartItem();
-
-
 });
-/////////////////////////
-// router.put('/followingItems', jsonParser, (req,res) =>{
-// // function handleDuplicates() {
-// // 	console.log('handleDuplicates running...');
-// // 	for(let i = 0; i<cart.length-1; i++) {
-// // 		if(cart[i].id == id){
-// // 			console.log('matcharoo!');
-// // 			User.updateOne({'_id':userid}, {$set: {cart: cart[i], cart: item}})
-// // 			.then(response=>{
-// // 				console.log('hooray');
-// // 				res.status(202).json(response);
-// // 			});
-// // 		}
-// // 	}
-// // }
-// console.log('followingItems running..');
+//////////////////////////////
+// router.put('/itemIntoCart', jsonParser, (req, res)=>{
+// let number;
+// function firstCartItem(){
+
+// for(let i = 0; i<=cart.length-1; i++){
+// 	if(cart[i].id === item.id){
+// 		console.log('doppelganger');
+// 		console.log(i);
+// 		number = i;
+// 		User.update({_id:userid}, {$set: `cart.${i}: null` })
+		
+		
+// 	} else {
+// 	User.updateOne({'_id': userid}, {$addToSet: {cart: item	}})
+// 		.then(response=>{
+// 		console.log(response);
+// 		res.status(202).json(response);
+// 	});
+// 	}
+// }
+
+
+// }
+
+// console.log('itemintocart running..');
 // let {cart, cartLength, pageType, userid, quantityOrdered, companyName, id, productDescription,productName,productPrice, shippingPrice, productRating, productStock, productType} = req.body;
 // let item = {quantityOrdered, companyName,id,productDescription,productName,productPrice,shippingPrice,productRating,productStock,productType};
-// console.log('handleDuplicates running...');
-// 	// for(let i = 0; i<cart.length-1; i++) {
-// 	// 	console.log('forloop should be going now');
-// 	// 	if(cart[i].id == id){
-// 	// 		console.log('matcharoo!');
-// 	// 		User.updateOne({'_id':userid}, {$set: {cart: cart[i], cart: item}})
-// 	// 		.then(response=>{
-// 	// 			console.log('hooray');
-// 	// 			res.status(202).json(response);
-// 	// 		});
-// 	// 	}
-// 	// }
-// User.update({'_id':userid},
-// 			{}
-// 	)
+
+// 	firstCartItem();
+
+
 // });
 
 

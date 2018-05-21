@@ -9,6 +9,10 @@ const ProductSchema = mongoose.Schema({
 	quantityOrdered: {
 		type: Number
 	},
+	images: {
+		type: Array
+	}
+	,
 	dateToCart:{
 		type: String
 	},
@@ -48,6 +52,7 @@ ProductSchema.methods.apiRepr = function(){
 	return {
 		id: this.id,
 		quantityOrdered: this.quantityOrdered || '',
+		images: this.images || '',
 		dateToCart: this.dateToCart || '',
 		companyName: this.companyName || '',
 		productName: this.productName || '',

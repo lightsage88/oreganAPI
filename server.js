@@ -4,13 +4,15 @@ const mongoose = require('mongoose');//mongoose lets us interact with mongoDB
 const morgan = require('morgan');//morgan is a commonly used logging plugin, its handy
 const passport = require('passport');//passport is the backbone of our security apparatus
 const bodyParser = require('body-parser');//should we need to use it, this will let us sniff out data from promises and turn it into json
+const braintree = require('braintree');
 const app = express();
+const jsonParser = bodyParser.json();
 
 const {router: usersRouter} = require('./users');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {router: productRouter} = require('./products');
 mongoose.Promise = global.Promise;
-const {PORT, DATABASE_URL} = require('./config');
+const {PORT, DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
 
 
 //we will use morgan for logging
@@ -22,7 +24,7 @@ app.use(function(req,res,next){
 	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 	res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
 	if(req.method === 'OPTIONS') {
-		return res.send(204);
+		return res.sendStatus(204);
 	}
 	next();
 });
@@ -76,6 +78,54 @@ function closeServer(){
 		});
 	});
 }
+
+var gateway = braintree.connect({
+    environment:  braintree.Environment.Sandbox,
+    merchantId:   merchantId,
+    publicKey:    publicKey,
+    privateKey:   privateKey
+});
+
+exports.handler = (event, context, callback) => {
+  const done = (err, response) => {
+    // return the required callback function
+    callback(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*", // need if calling API from WebView which is just a browser
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers":
+          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
+      },
+      statusCode: err ? "400" : "200",
+      body: err
+        ? JSON.stringify({
+            type: "error",
+            err
+          })
+        : JSON.stringify({
+            type: "success",
+            response
+          })
+    });
+  };
+ }
+
+gateway.clientToken.generate({}, function (err, response) {
+  var clientToken = response.clientToken
+});
+
+app.get("/api/client_token", jsonParser, function (req, res) {
+  gateway.clientToken.generate({}, function (err, response) {
+  	console.log(response);
+  	console.log(response.clientToken);
+  	let clientToken = response.clientToken;
+    return res.status(200).json(clientToken);
+  });
+});
+
+
+
+
 
 if(require.main === module) {
 	runServer().catch(err => console.error(err));

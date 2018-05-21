@@ -31,11 +31,11 @@ const ProductSchema = mongoose.Schema({
 		type: Number
 	},
 	productPrice:{
-		type: String,
+		type: Number,
 		require: true
 	},
 	shippingPrice:{
-		type: String,
+		type: Number,
 		require: true
 	},
 	productStock: {

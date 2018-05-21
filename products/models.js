@@ -23,6 +23,10 @@ const ProductSchema = mongoose.Schema({
 		type: String,
 		require: true
 	},
+	productWeightKg: {
+		type: Number,
+		require: true
+	},
 	productDescription:{
 		type: String,
 		require: true
@@ -61,7 +65,8 @@ ProductSchema.methods.apiRepr = function(){
 		productPrice: this.productPrice || '',
 		shippingPrice: this.shippingPrice || '',
 		productStock: this.productStock || '',
-		productType: this.productType || ''
+		productType: this.productType || '',
+		productWeightKg: this.productWeightKg || ''
 	}
 }
 

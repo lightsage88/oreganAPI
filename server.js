@@ -12,6 +12,7 @@ const {router: usersRouter} = require('./users');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {router: productRouter} = require('./products');
 const {router: braintreeRouter} = require('./braintree');
+const {router: shippoRouter} = require('./shippo');
 // const {router: shippoRouter} = require('./shippo');
 mongoose.Promise = global.Promise;
 const {PORT, SHIPPO_KEY,DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
@@ -37,7 +38,8 @@ passport.use(jwtStrategy);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 app.use('/api/products/', productRouter);
-app.use('/api/braintree/', braintreeRouter)
+app.use('/api/braintree/', braintreeRouter);
+app.use('/api/shippo', shippoRouter);
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
@@ -116,15 +118,6 @@ var parcel = {
     "mass_unit": "lb"
 };
 //we specify which carrier accounts we want to use by passing in each
-// shippo.carrieraccount.create({
-//     "carrier":"fedex", 
-//     "account_id":"510087240", 
-//     "parameters":{"meter":"119044507"},
-//     "test":true,
-//     "active":true
-// }, function(err, account) {
-//   	console.log(account);
-// });
 
 
 shippo.shipment.create({
@@ -147,51 +140,13 @@ shippo.shipment.create({
 		console.log(transaction);
 	});
 });
-// var addressFrom = {
-// 	"name":"Shawn Toppple",
-// 	"street1": "215 Clayton St.",
-// 	"city":"San Francisco",
-// 	"state":"CA",
-// 	"zip":"94117",
-// 	"country":"US",
-// 	"phone":"+1 555 341 9393",
-// 	"email":"shippottle@goshippo.com"
-// };
 
-// var addressTo = {
-// 	"name":"Mr. Hippo",
-// 	"street1":"Broadway 1",
-// 	"city":"New York",
-// 	"state":"NY",
-// 	"zip":"10007",
-// 	"country":"US",
-// 	"phone":"+1 555 341 9393",
-// 	"email":"mrhippo@goshippo.com"
-// };
-
-// var parcel = {
-// 	// "length": "",
-// 	// "width":"",
-// 	// "height":"",
-// 	// "distance_unit":"",
 // //We should create an algorithm to figure out the combined dimensions of the users cart
 // //then we can make sure that it is smaller than what the various templates offer ;)
 // //also we should have kilograms (kg) be our weight method of choice.
-// 	"template": "FedEx_Box_Large_1",
-// 	"weight":"2",
-// 	"mass_unit": "lb"
-// };
 
-// shippo.shipment.create({
-// 	"address_from":addressFrom, 
-// 	"address_to":addressTo,
-// 	"parcels": [parcel],
-// 	"async": false
-// }, function(err,shipment){
-// 	//asynchronously called
-// 	console.log(shipment);
-// 	shipment= shipment;
-// }); 
+
+
 //For the various values, such as TO FROM, WEIGHT, etc,
 //we should make an endpoint for once this portion is
 //modularized, allowing us to make a call to the endpoint and having the

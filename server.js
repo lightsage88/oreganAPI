@@ -12,6 +12,7 @@ const {router: usersRouter} = require('./users');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {router: productRouter} = require('./products');
 const {router: braintreeRouter} = require('./braintree');
+// const {router: shippoRouter} = require('./shippo');
 mongoose.Promise = global.Promise;
 const {PORT, SHIPPO_KEY,DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
 
@@ -31,7 +32,7 @@ app.use(function(req,res,next){
 });
 
 passport.use(localStrategy);
-passport.use(jwtStrategy);
+passport.use(jwtStrategy); 
 
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
@@ -82,51 +83,55 @@ function closeServer(){
 	});
 }
 
-// var gateway = braintree.connect({
-//     environment:  braintree.Environment.Sandbox,
-//     merchantId:   merchantId,
-//     publicKey:    publicKey,
-//     privateKey:   privateKey
-// });
+var shippo = require('shippo')(SHIPPO_KEY);
 
-// exports.handler = (event, context, callback) => {
-//   const done = (err, response) => {
-//     // return the required callback function
-//     callback(null, {
-//       headers: {
-//         "Access-Control-Allow-Origin": "*", // need if calling API from WebView which is just a browser
-//         "Content-Type": "application/json",
-//         "Access-Control-Allow-Headers":
-//           "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token"
-//       },
-//       statusCode: err ? "400" : "200",
-//       body: err
-//         ? JSON.stringify({
-//             type: "error",
-//             err
-//           })
-//         : JSON.stringify({
-//             type: "success",
-//             response
-//           })
-//     });
-//   };
-//  }
+var addressFrom = {
+	"name":"Shawn Toppple",
+	"street1": "215 Clayton St.",
+	"city":"San Francisco",
+	"state":"CA",
+	"zip":"94117",
+	"country":"US",
+	"phone":"+1 555 341 9393",
+	"email":"shippottle@goshippo.com"
+};
 
-// gateway.clientToken.generate({}, function (err, response) {
-//   var clientToken = response.clientToken
-// });
+var addressTo = {
+	"name":"Mr. Hippo",
+	"street1":"Broadway 1",
+	"city":"New York",
+	"state":"NY",
+	"zip":"10007",
+	"country":"US",
+	"phone":"+1 555 341 9393",
+	"email":"mrhippo@goshippo.com"
+};
 
-// app.get("/api/client_token", jsonParser, function (req, res) {
-//   gateway.clientToken.generate({}, function (err, response) {
-//   	console.log(response);
-//   	console.log(response.clientToken);
-//   	let clientToken = response.clientToken;
-//     return res.status(200).json(clientToken);
-//   });
-// });
+var parcel = {
+	// "length": "",
+	// "width":"",
+	// "height":"",
+	// "distance_unit":"",
+	"template": "FedEx_Box_Large_1",
+	"weight":"2",
+	"mass_unit": "lb"
+};
 
-
+shippo.shipment.create({
+	"address_from":addressFrom, 
+	"address_to":addressTo,
+	"parcels": [parcel],
+	"async": false
+}, function(err,shipment){
+	//asynchronously called
+	console.log(shipment);
+}); 
+//For the various values, such as TO FROM, WEIGHT, etc,
+//we should make an endpoint for once this portion is
+//modularized, allowing us to make a call to the endpoint and having the
+//shippo npm generate labels, etc for us.
+//Now we have our shipment object showing up in the console.
+//next we need a transaction object
 
 
 

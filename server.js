@@ -11,8 +11,9 @@ const jsonParser = bodyParser.json();
 const {router: usersRouter} = require('./users');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {router: productRouter} = require('./products');
+const {router: braintreeRouter} = require('./braintree');
 mongoose.Promise = global.Promise;
-const {PORT, DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
+const {PORT, SHIPPO_KEY,DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
 
 
 //we will use morgan for logging
@@ -35,6 +36,7 @@ passport.use(jwtStrategy);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 app.use('/api/products/', productRouter);
+app.use('/api/braintree/', braintreeRouter)
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
@@ -55,6 +57,7 @@ function runServer() {
 			server = app
 			.listen(PORT, ()=>{
 				console.log(`OregAN API will be running on port: ${PORT}`);
+				
 				resolve();
 			})
 			.on('error', err=>{

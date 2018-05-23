@@ -25,10 +25,20 @@ var shippo = require('shippo')(SHIPPO_KEY);
 
 router.post('/createShipment', jsonParser, function(req,res){
 	console.log('createShipment running...');
-	console.log(req);
-	console.log(req.body);
+	let {addressTo, parcel} = req.body;
+	shippo.shipment.create({
+    "address_from": addressFrom,
+    "address_to": addressTo,
+    "parcels": [parcel],
+    "async": false
+	}, function(err, shipment){
+    console.log(shipment.rates);
+    let rates = shipment.rates;
+    return res.status(202).json(rates);
+	})
+	.catch(function(err){
+		return res.status(404).json({message: 'problem creatingShipment'});
+	});
 });
-
-
 module.exports = {router};
 

@@ -27,6 +27,30 @@ const ProductSchema = mongoose.Schema({
 		type: Number,
 		require: true
 	},
+	productWidthInches: {
+		type: Number,
+		require: true
+	},
+	productHeightInches: {
+		type: Number,
+		require: true
+	},
+	productLengthInches: {
+		type: Number,
+		require: true
+	},
+	//going to add LENGTH, WIDTH, HEIGHT
+	//distance Unit will remain inches
+	//Weight will be added up,
+	//go to shippo and change your key to have the mass unit be ;kg'
+	// var parcel = {
+//     "length": "5",
+//     "width": "5",
+//     "height": "5",
+//     "distance_unit": "in",
+//     "weight": "2",
+//     "mass_unit": "lb"
+// };
 	productDescription:{
 		type: String,
 		require: true
@@ -66,7 +90,10 @@ ProductSchema.methods.apiRepr = function(){
 		shippingPrice: this.shippingPrice || '',
 		productStock: this.productStock || '',
 		productType: this.productType || '',
-		productWeightKg: this.productWeightKg || ''
+		productWeightKg: this.productWeightKg || '',
+		productWidthInches: this.productWidthInches || '',
+		productHeightInches: this.productHeightInches || '',
+		productLengthInches: this.productLengthInches || ''
 	}
 }
 

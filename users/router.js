@@ -99,7 +99,8 @@ router.post('/', jsonParser, (req,res)=>{
 				lastName,
 				cellNumber,
 				cart,
-				pastPurchases
+				pastPurchases,
+				checkout
 			});
 		})
 		.then(function(user){

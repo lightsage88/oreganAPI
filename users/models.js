@@ -36,7 +36,8 @@ const UserSchema = mongoose.Schema({
 		required: true
 	},
 	cart: Array,
-	pastPurchases: Array
+	pastPurchases: Array,
+	checkout: Array
 });
 
 UserSchema.methods.apiRepr = function(){
@@ -48,7 +49,8 @@ UserSchema.methods.apiRepr = function(){
 		lastName: this.lastName || '',
 		cellNumber: this.cellNumber || '',
 		cart: this.cart,
-		pastPurchases: this.pastPurchases
+		pastPurchases: this.pastPurchases,
+		checkout: this.checkout
 	};
 };
 

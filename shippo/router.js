@@ -21,11 +21,40 @@ var addressFrom  = {
 
 
 var shippo = require('shippo')(SHIPPO_KEY);
-
+var mass_unit = 'kg';
 
 router.post('/createShipment', jsonParser, function(req,res){
 	console.log('createShipment running...');
-	let {addressTo, parcel} = req.body;
+	// let {addressTo, parcel} = req.body;
+
+	console.log(req.body);
+	let {firstNameShipping, lastNameShipping, streetNameShipping, cityShipping, sprShipping, 
+		zipShipping, countryShipping, widthShipping, heightShipping, lengthShipping, weightShipping, emailShipping, phoneShipping} = req.body;
+	
+	console.log(widthShipping);
+	console.log(heightShipping);
+	console.log(lengthShipping);
+	console.log(weightShipping);
+	let parcel = {
+		"length": lengthShipping,
+		"width": widthShipping,
+		"height": heightShipping,
+		"distance_unit": "in",
+		"weight": weightShipping,
+		"mass_unit": "kg"
+	};
+	let addressTo = {
+		"name": firstNameShipping + lastNameShipping,
+		"street1": streetNameShipping,
+		"city": cityShipping,
+		"state": sprShipping,
+		"zip": zipShipping,
+		"country": countryShipping,
+		"phone": phoneShipping,
+		"email": emailShipping
+	};
+console.log(addressTo);
+console.log(parcel);
 	shippo.shipment.create({
     "address_from": addressFrom,
     "address_to": addressTo,

@@ -20,7 +20,7 @@ var addressFrom  = {
 };
 
 
-var shippo = require('shippo')(SHIPPO_KEY);
+var shippo = require('shippo')('shippo_test_c3f2fe6e2f03cd8c8908a44c6509cd0a679b345b');
 var mass_unit = 'kg';
 
 router.post('/createShipment', jsonParser, function(req,res){
@@ -69,5 +69,8 @@ console.log(parcel);
 		return res.status(404).json({message: 'problem creatingShipment'});
 	});
 });
+
+
+
 module.exports = {router};
 

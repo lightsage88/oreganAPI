@@ -49,5 +49,22 @@ router.get("/client_token", jsonParser, function (req, res) {
   });
 });
 
+router.post("/checkout", jsonParser, function(req, res){
+  console.log('/checkout running...');
+  console.log(req.body);
+  let {nonce, totalCost} = req.body;
+  console.log(nonce);
+  console.log(totalCost);
+  gateway.transaction.sale({
+    amount: totalCost,
+    paymentMethodNonce: nonce,
+    options: {
+      submitForSettlement: true
+    }
+
+  }, function (err, result){
+    console.log(result);
+  });
+});
 
 module.exports = {router};

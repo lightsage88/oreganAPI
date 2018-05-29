@@ -70,6 +70,21 @@ console.log(parcel);
 	});
 });
 
+router.post('/createTransaction', jsonParser, function(req,res){
+	console.log('SHIPPO createTransaction running...');
+	let {shippingMethodID} = req.body;
+	console.log(shippingMethodID);
+
+	shippo.transaction.create({
+		"rate": shippingMethodID,
+		"label_file_type": "PDF",
+		"async": false
+	}, function(err, transaction){
+		console.log(transaction);
+	});
+//find the label under the label_url path
+});
+
 
 
 module.exports = {router};

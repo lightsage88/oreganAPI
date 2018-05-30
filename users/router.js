@@ -1,3 +1,5 @@
+const result = require('../braintree/router');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const {User} = require('./models');
@@ -7,6 +9,10 @@ const request = require('request');
 
 const jsonParser = bodyParser.json();
 const bcrypt = require('bcryptjs');
+
+
+console.log('here is something of a test');
+console.log(result);
 
 router.post('/', jsonParser, (req,res)=>{
 	console.log('running our bland post');

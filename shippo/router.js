@@ -81,6 +81,7 @@ router.post('/createTransaction', jsonParser, function(req,res){
 		"async": false
 	}, function(err, transaction){
 		console.log(transaction);
+		return res.status(202).json(transaction);
 	});
 //find the label under the label_url path
 });

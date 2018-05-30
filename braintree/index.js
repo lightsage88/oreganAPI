@@ -1,6 +1,6 @@
 const braintree = require('braintree');
-const {router} = require('./router');
+const {router, result} = require('./router');
 const {merchantId, publicKey, privateKey} = require('./../config');
 
 
-module.exports = {router};
+module.exports = {router, result};

@@ -5,6 +5,8 @@ const router = express.Router();
 const jsonParser = bodyParser.json();
 const {merchantId, publicKey, privateKey} = require('./../config');
 
+
+
 var gateway = braintree.connect({
     environment:  braintree.Environment.Sandbox,
     merchantId:   merchantId,
@@ -52,18 +54,58 @@ router.get("/client_token", jsonParser, function (req, res) {
 router.post("/checkout", jsonParser, function(req, res){
   console.log('/checkout running...');
   console.log(req.body);
-  let {nonce, totalCost} = req.body;
-  console.log(nonce);
-  console.log(totalCost);
+  let {nonce, totalCost, countryNameShipping, 
+    countryNameBilling, emailShipping, emailBilling, 
+    extendedStreetShipping, extendedStreetBilling,firstNameShipping,firstNameBilling,
+    lastNameShipping,lastNameBilling,id,localityBilling, localityShipping,phoneShipping,
+    phoneBilling,postalCodeShipping,postalCodeBilling,regionShipping,regionBilling, 
+    streetNameShipping, streetNameBilling, firstNameCustomer, lastNameCustomer, emailCustomer, phoneCustomer} = req.body;
+  console.log(phoneBilling);
+  
   gateway.transaction.sale({
     amount: totalCost,
     paymentMethodNonce: nonce,
+    customer: {
+        firstName: firstNameCustomer,
+        lastName: lastNameCustomer,
+        company: "",
+        phone: phoneCustomer,
+        fax: "",
+        website: "",
+        email: emailCustomer
+      },
+      billing: {
+        firstName: firstNameBilling,
+        lastName: lastNameBilling,
+        company: "",
+        streetAddress: streetNameBilling,
+        extendedAddress: extendedStreetBilling,
+        locality: localityBilling,
+        region: regionBilling,
+        postalCode: postalCodeBilling,
+        countryCodeAlpha2: countryNameBilling
+      },
+      shipping: {
+        firstName: firstNameShipping,
+        lastName: lastNameShipping,
+        company: "",
+        streetAddress: streetNameShipping,
+        extendedAddress: extendedStreetShipping,
+        locality: localityShipping,
+        region: regionShipping,
+        postalCode: postalCodeShipping,
+        countryCodeAlpha2: countryNameShipping
+      },
+
     options: {
       submitForSettlement: true
     }
 
   }, function (err, result){
+    console.log('magic shuold be here');
     console.log(result);
+    
+    return res.status(202).json(result);
   });
 });
 

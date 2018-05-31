@@ -59,7 +59,8 @@ router.post("/checkout", jsonParser, function(req, res){
     extendedStreetShipping, extendedStreetBilling,firstNameShipping,firstNameBilling,
     lastNameShipping,lastNameBilling,id,localityBilling, localityShipping,phoneShipping,
     phoneBilling,postalCodeShipping,postalCodeBilling,regionShipping,regionBilling, 
-    streetNameShipping, streetNameBilling, firstNameCustomer, lastNameCustomer, emailCustomer, phoneCustomer} = req.body;
+    streetNameShipping, streetNameBilling, firstNameCustomer, 
+    lastNameCustomer, emailCustomer, phoneCustomer, itemCost, shippingMethodCost, serviceFees} = req.body;
   console.log(phoneBilling);
   
   gateway.transaction.sale({
@@ -95,6 +96,11 @@ router.post("/checkout", jsonParser, function(req, res){
         region: regionShipping,
         postalCode: postalCodeShipping,
         countryCodeAlpha2: countryNameShipping
+      },
+      customFields: {
+        item_cost: itemCost,
+        shipping_method_cost: shippingMethodCost,
+        service_fees: serviceFees
       },
 
     options: {

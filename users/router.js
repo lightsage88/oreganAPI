@@ -10,9 +10,21 @@ const request = require('request');
 const jsonParser = bodyParser.json();
 const bcrypt = require('bcryptjs');
 
+//Imports from bt and shippo routers
+const {btReceipt, cart} = require('../braintree');
+const {shippoReceipt} = require('../shippo');
+//
+console.log(btReceipt);
+	console.log(cart);
+	console.log(shippoReceipt);
+router.get('/testshit', jsonParser, (req,res)=>{
+	console.log('testshit running...');
+	console.log(btReceipt);
+	console.log(cart);
+	console.log(shippoReceipt);
+});
 
-console.log('here is something of a test');
-console.log(result);
+
 
 router.post('/', jsonParser, (req,res)=>{
 	console.log('running our bland post');
@@ -205,6 +217,22 @@ router.put('/itemIntoCart', jsonParser, (req,res)=>{
 		console.log(response);
 		res.status(202).json(response);	
 	});
+});
+
+router.put('/finishTransaction', jsonParser, (req,res)=>{
+	console.log('finishTransaction running...');
+	
+	let {receipt} = req.body;
+	let object = receipt.transaction;
+	let id = receipt.transaction.customFields.mlabUserId;
+	User.update({'_id': id}, {$push: {'pastPurchases':object} } )
+	.then(response => {
+		console.log(response);
+		res.status(202).json(response);
+	});
+
+
+
 });
 //////////////////////////////
 // router.put('/itemIntoCart', jsonParser, (req, res)=>{

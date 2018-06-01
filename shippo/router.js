@@ -7,6 +7,7 @@ const router = express.Router();
 const jsonParser = bodyParser.json();
 const {SHIPPO_KEY} = require('./../config');
 
+let shippoReceipt='';
 //for now I'm putting a sample address
 var addressFrom  = {
     "name": "Oregan-PTD",
@@ -81,6 +82,7 @@ router.post('/createTransaction', jsonParser, function(req,res){
 		"async": false
 	}, function(err, transaction){
 		console.log(transaction);
+		shippoReceipt = transaction;
 		return res.status(202).json(transaction);
 	});
 //find the label under the label_url path
@@ -88,5 +90,5 @@ router.post('/createTransaction', jsonParser, function(req,res){
 
 
 
-module.exports = {router};
+module.exports = {router, shippoReceipt};
 

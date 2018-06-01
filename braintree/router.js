@@ -5,7 +5,8 @@ const router = express.Router();
 const jsonParser = bodyParser.json();
 const {merchantId, publicKey, privateKey} = require('./../config');
 
-
+let btReceipt;
+let cart;
 
 var gateway = braintree.connect({
     environment:  braintree.Environment.Sandbox,
@@ -54,20 +55,24 @@ router.get("/client_token", jsonParser, function (req, res) {
 router.post("/checkout", jsonParser, function(req, res){
   console.log('/checkout running...');
   console.log(req.body);
-  let {nonce, totalCost, countryNameShipping, 
+  let {cart, nonce, totalCost, countryNameShipping, 
     countryNameBilling, emailShipping, emailBilling, 
     extendedStreetShipping, extendedStreetBilling,firstNameShipping,firstNameBilling,
     lastNameShipping,lastNameBilling,id,localityBilling, localityShipping,phoneShipping,
     phoneBilling,postalCodeShipping,postalCodeBilling,regionShipping,regionBilling, 
     streetNameShipping, streetNameBilling, firstNameCustomer, 
-    lastNameCustomer, emailCustomer, phoneCustomer, itemCost, shippingMethodCost, serviceFees} = req.body;
-  console.log(phoneBilling);
+    lastNameCustomer, emailCustomer, phoneCustomer, itemCost, shippingMethodCost, serviceFees, shippingMethodID} = req.body;
+console.log('here is the cart');
+console.log(cart);
+console.log('we need to get just the bare minimum');
+let thing;
+
+
   
   gateway.transaction.sale({
     amount: totalCost,
     paymentMethodNonce: nonce,
     customer: {
-        id: id,
         firstName: firstNameCustomer,
         lastName: lastNameCustomer,
         company: "",
@@ -101,7 +106,10 @@ router.post("/checkout", jsonParser, function(req, res){
       customFields: {
         item_cost: itemCost,
         shipping_method_cost: shippingMethodCost,
-        service_fees: serviceFees
+        service_fees: serviceFees,
+        mlab_user_id: id,
+        shipping_method_id: shippingMethodID,
+        shopper_cart: cart
       },
 
     options: {
@@ -111,9 +119,10 @@ router.post("/checkout", jsonParser, function(req, res){
   }, function (err, result){
     console.log('magic shuold be here');
     console.log(result);
-    
+    btReceipt = result;
+    cart = cart;
     return res.status(202).json(result);
   });
 });
 
-module.exports = {router};
+module.exports = {router, btReceipt, cart};

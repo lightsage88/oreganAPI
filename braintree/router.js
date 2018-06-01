@@ -67,6 +67,7 @@ router.post("/checkout", jsonParser, function(req, res){
     amount: totalCost,
     paymentMethodNonce: nonce,
     customer: {
+        id: id,
         firstName: firstNameCustomer,
         lastName: lastNameCustomer,
         company: "",

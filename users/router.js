@@ -225,7 +225,7 @@ router.put('/finishTransaction', jsonParser, (req,res)=>{
 	let {receipt} = req.body;
 	let object = receipt.transaction;
 	let id = receipt.transaction.customFields.mlabUserId;
-	User.update({'_id': id}, {$push: {'pastPurchases':object} } )
+	User.update({'_id': id}, {$push: {'pastPurchases':object}, $set:{'cart': []} } )
 	.then(response => {
 		console.log(response);
 		res.status(202).json(response);

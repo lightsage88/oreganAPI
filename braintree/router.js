@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const braintree = require('braintree');
 const bodyParser = require('body-parser');
 const router = express.Router();
@@ -7,6 +8,16 @@ const {merchantId, publicKey, privateKey} = require('./../config');
 
 let btReceipt;
 let cart;
+let billerEmail='';
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'rosecityshopperUSA@gmail.com',
+    pass:'ptdpassword'
+  }
+})
+
+
 
 var gateway = braintree.connect({
     environment:  braintree.Environment.Sandbox,
@@ -43,6 +54,8 @@ gateway.clientToken.generate({}, function (err, response) {
   var clientToken = response.clientToken
 });
 
+
+
 router.get("/client_token", jsonParser, function (req, res) {
   gateway.clientToken.generate({}, function (err, response) {
   	console.log(response);
@@ -66,6 +79,7 @@ console.log('here is the cart');
 console.log(cart);
 console.log('we need to get just the bare minimum');
 let thing;
+billerEmail = emailBilling;
 
 
   
@@ -109,7 +123,8 @@ let thing;
         service_fees: serviceFees,
         mlab_user_id: id,
         shipping_method_id: shippingMethodID,
-        shopper_cart: cart
+        shopper_cart: cart,
+        shippo_details: ''
       },
 
     options: {
@@ -121,6 +136,25 @@ let thing;
     console.log(result);
     btReceipt = result;
     cart = cart;
+    console.log(emailBilling);
+    console.log(billerEmail);
+    let mailOptions = {
+  from: '"RoseCityShopperUSA"<rosecityshopperUSA@gmail.com>',
+  to: `${billerEmail}, rosecityshopperUSA@gmail.com`,
+  subject: 'Thanks for your purchase!',
+  text: 'You bought something from our store! Here are the deets',
+  html: 
+  `<b>
+    <h3>Bob Lob Law</h3>
+    <section>${result}</section>
+  </b>`
+};
+    transporter.sendMail(mailOptions, function (err, info) {
+   if(err)
+     console.log(err)
+   else
+     console.log(info);
+});
     return res.status(202).json(result);
   });
 });

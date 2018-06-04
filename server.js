@@ -41,6 +41,7 @@ app.use('/api/auth/', authRouter);
 app.use('/api/products/', productRouter);
 app.use('/api/braintree/', braintreeRouter);
 app.use('/api/shippo/', shippoRouter);
+app.use('/api/nodemailer/', nodeMailerRouter);
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 

@@ -13,6 +13,7 @@ const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {router: productRouter} = require('./products');
 const {router: braintreeRouter} = require('./braintree');
 const {router: shippoRouter} = require('./shippo');
+const {router: nodeMailerRouter} = require('./nodemailer');
 // const {router: shippoRouter} = require('./shippo');
 mongoose.Promise = global.Promise;
 const {PORT, SHIPPO_KEY,DATABASE_URL, merchantId, publicKey, privateKey} = require('./config');
@@ -84,85 +85,7 @@ function closeServer(){
 		});
 	});
 }
-// shippo_test_c3f2fe6e2f03cd8c8908a44c6509cd0a679b345b
-// var shippo = require('shippo')('shippo_test_c3f2fe6e2f03cd8c8908a44c6509cd0a679b345b');
-// let shipment;
 
-// var addressFrom  = {
-//     "name": "Oregan-PTD",
-//     "street1": "1785 SW Pheasant Drive",
-//     "city": "Aloha",
-//     "state": "OR",
-//     "zip": "97006",
-//     "country": "US",
-//     "phone": "+1 971-226-2846",
-//     "email": "adrian.e.rosales@gmail.com"
-// };
-
-// var addressTo = {
-//     "name": "Mr Hippo",
-//     "street1": "30 Bạch Đằng",
-//     "city": "Kon Tum",
-//     "country": "VN",
-//     "zip": "580000",
-//     "phone": "+84 260 3863 334",
-//     "email": "mrhippo@goshippo.com"
-// };
-
-// var parcel = {
-//     "length": "5",
-//     "width": "5",
-//     "height": "5",
-//     "distance_unit": "in",
-//     "weight": "2",
-//     "mass_unit": "lb"
-// };
-// //we specify which carrier accounts we want to use by passing in each
-
-
-// shippo.shipment.create({
-//     "address_from": addressFrom,
-//     "address_to": addressTo,
-//     "parcels": [parcel],
-//     "async": false
-// }, function(err, shipment){
-//     console.log(shipment);
-//     shipment=shipment;
-//     var rate = shipment.rates[0];
-//     console.log(rate);
-//     console.log('take it back to the register');
-//     console.log(shipment.rates);
-// 	shippo.transaction.create({
-// 		"rate": rate.object_id,
-// 		"label_file_type": "PDF",
-// 		"async": false
-// 	}, function(err, transaction){
-// 		console.log(transaction);
-// 	});
-// });
-
-// //We should create an algorithm to figure out the combined dimensions of the users cart
-// //then we can make sure that it is smaller than what the various templates offer ;)
-// //also we should have kilograms (kg) be our weight method of choice.
-
-
-
-//For the various values, such as TO FROM, WEIGHT, etc,
-//we should make an endpoint for once this portion is
-//modularized, allowing us to make a call to the endpoint and having the
-//shippo npm generate labels, etc for us.
-//Now we have our shipment object showing up in the console.
-//next we need a transaction object
-
-// var rate = shipment.rates[0];
-
-// shippo.transaction.create({
-// 	"rate": rate.object._id,
-// 	"label_file_type": "PDF",
-// 	"async": false
-// }, function(err, transaction){
-// 	console.log(transaction);
-// });
 
 if(require.main === module) {
 	runServer().catch(err => console.error(err));

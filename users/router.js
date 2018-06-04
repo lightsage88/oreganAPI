@@ -17,6 +17,9 @@ const {shippoReceipt} = require('../shippo');
 console.log(btReceipt);
 	console.log(cart);
 	console.log(shippoReceipt);
+
+
+let id = '';
 router.get('/testshit', jsonParser, (req,res)=>{
 	console.log('testshit running...');
 	console.log(btReceipt);
@@ -90,8 +93,7 @@ router.post('/', jsonParser, (req,res)=>{
 	}
 
 	let {username, emailAddress, password, firstName, lastName, cellNumber} = req.body;
-	console.log(req.body);
-	console.log(emailAddress);
+	
 	return User.find({username})
 		.count()
 		.then(function(count){
@@ -107,8 +109,7 @@ router.post('/', jsonParser, (req,res)=>{
 			return User.hashPassword(password);
 		})
 		.then(function(hash){
-			console.log('hashing away');
-			console.log(hash);
+			
 			return User.create({
 				username,
 				emailAddress,
@@ -153,15 +154,12 @@ router.get('/', function(req, res){
 });
 
 router.delete('/', jsonParser, (req, res)=>{
-	console.log('deleting a user');
 	let {id} = req.body;
-	console.log(id);
 	return User.findOne({'_id':id})
 	.then((user)=>{
 		let killSwitch = id;
 		return User.deleteOne({'_id': killSwitch})
 		.then((response)=>{
-			console.log(`account with the id of ${killSwitch} has been deleted`);
 			res.status(204).json({message: 'Account Deleted'});
 		})
 		.catch((err)=>{
@@ -174,8 +172,6 @@ router.delete('/', jsonParser, (req, res)=>{
 
 router.put('/', jsonParser, function(req, res){
 //a put endpoint to edit the basic account details of a users account, not involved with the cart/past purchases
-	console.log('editing details');
-	console.log(req.body);
 	let {_id, firstName, lastName, cellNumber} = req.body;
 	User.updateOne({_id},
 			{$set: 
@@ -214,17 +210,15 @@ router.put('/itemIntoCart', jsonParser, (req,res)=>{
 	let {cart, userid, pageType} = req.body;
 	User.update({'_id':userid}, {$set: {'cart':cart}})
 	.then(response=>{
-		console.log(response);
 		res.status(202).json(response);	
 	});
 });
 
 router.put('/finishTransaction', jsonParser, (req,res)=>{
-	console.log('finishTransaction running...');
 	
 	let {receipt} = req.body;
 	let object = receipt.transaction;
-	let id = receipt.transaction.customFields.mlabUserId;
+	id = receipt.transaction.customFields.mlabUserId;
 	User.update({'_id': id}, {$push: {'pastPurchases':object}, $set:{'cart': []} } )
 	.then(response => {
 		console.log(response);
@@ -234,40 +228,41 @@ router.put('/finishTransaction', jsonParser, (req,res)=>{
 
 
 });
-//////////////////////////////
-// router.put('/itemIntoCart', jsonParser, (req, res)=>{
-// let number;
-// function firstCartItem(){
-
-// for(let i = 0; i<=cart.length-1; i++){
-// 	if(cart[i].id === item.id){
-// 		console.log('doppelganger');
-// 		console.log(i);
-// 		number = i;
-// 		User.update({_id:userid}, {$set: `cart.${i}: null` })
-		
-		
-// 	} else {
-// 	User.updateOne({'_id': userid}, {$addToSet: {cart: item	}})
-// 		.then(response=>{
-// 		console.log(response);
-// 		res.status(202).json(response);
-// 	});
-// 	}
-// }
 
 
-// }
+router.put('/addShippoToMlab', jsonParser, (req,res)=> {
+	let {shippoObject, id} = req.body;
+	console.log(shippoObject);
+	console.log(id);
+	let rate = shippoObject.rate;
+	console.log('here is our rate, yo');
+	console.log(rate);
 
-// console.log('itemintocart running..');
-// let {cart, cartLength, pageType, userid, quantityOrdered, companyName, id, productDescription,productName,productPrice, shippingPrice, productRating, productStock, productType} = req.body;
-// let item = {quantityOrdered, companyName,id,productDescription,productName,productPrice,shippingPrice,productRating,productStock,productType};
+	// User.update({'_id':id},
+	// //we want to find the last chunk in pastPurchases, then go to customFields, and insert a key 'shippoObject' with our [shippoObject] in there.
+	//  {})
 
-// 	firstCartItem();
+	// User.find({"pastPurchases.$": rate})
+	// .then(function(users){
+	// 	console.log('...maybe this worked?');
+	// 	console.log(users)
+	// })
+	// .catch(err=> {
+	// 	console.log(err);
+	// });
 
+	// User.update(
+	// 	{'_id': id, 'pastPurchases.id': 'fhyw2xy5'},
+	// 	{$set: {"pastPurchases.$.shippoDetails": shippoObject} }
 
-// });
+	// 	)
+	// .then(response=>{
+	// 	console.log('dont have a cow');
+	// 	console.log(response);
+	// 	res.status(204).json(response);
+	// });
 
+});
 
 
 module.exports = {router};

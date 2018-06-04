@@ -17,6 +17,70 @@ let transporter = nodemailer.createTransport({
 router.post('/emailCustomer', jsonParser, function(req,res){
   console.log('/emailCustomer running...');
   console.log(req.body);
+  let {bT, shippo} = req.body;
+  
+
+  let mailOptions = {
+    from:' "RoseCityShopperUSA"<rosecityshopperUSA@gmail.com>',
+    to: `${bT.customFields.billingEmail}`,
+    subject: `Thanks for your purchase! #${bT.id}`,
+    text: 'RoseCityShopperUSA Receipt',
+    html: 
+    `<b>
+        <h1>Thank you so much for your purchase today!</h1>
+        <p>Below we have some details related to your purchase.</p>
+        <h2>Order #${bT.id}</h2>
+
+        <h3>Shipping Details</h3>
+        <ul>
+          <li>Shipping Tracking Number: ${shippo.tracking_number}</li>
+          <li>Shipping Tracking Provider URL: ${shippo.tracking_url_provider}</li>
+        </ul>
+        <h3>What we sold</h3>
+        <ul>
+          <p>Under Construction...please look at mLab for now</p>
+
+        </ul>
+        <h3>The shipping address you gave us:</h3>
+        <ul>
+          <li>Name: ${bT.shipping.firstName} ${bT.shipping.lastName}</li>
+          <li>Address: ${bT.shipping.streetAddress}</li>
+          <li>Ext. Address: ${bT.shipping.extendedAddress}</li>
+          <li>City/Locality: ${bT.shipping.locality}</li>
+          <li>State/Region: ${bT.shipping.region}</li>
+          <li>Zipcode: ${bT.shipping.postalCode}</li>
+          <li>Country: ${bT.shipping.countryName}</li>
+        </ul>
+        <h3>Who got billed:</h3>
+        <ul>
+          <li>Name: ${bT.billing.firstName} ${bT.billing.lastName}</li>
+          <li>Address: ${bT.billing.streetAddress}</li> 
+          <li>Ext. Address ${bT.billing.extendedAddress}</li>
+          <li>City/Locality: ${bT.billing.locality}</li>
+          <li>State/Region: ${bT.billing.region}</li>
+          <li>Zipcode: ${bT.billing.postalCode}</li>
+          <li>Country: ${bT.billing.countryName}</li>
+        </ul>
+        <h3>Money Details</h3>
+        <ul>
+          <li>Cost of Product(s): ${bT.customFields.itemCost} ${bT.currencyIsoCode}</li>
+          <li>Shipping Method Cost: ${bT.customFields.shippingMethodCost} ${bT.currencyIsoCode}</li>
+          <li>Service Fees: ${bT.customFields.serviceFees} ${bT.currencyIsoCode}</li>
+          <li>GRAND TOTAL: ${bT.amount} ${bT.currencyIsoCode}</li>
+        </ul>
+
+        <p>If you have any issues, please email us at <a href='mailto:rosecityshopperUSA@gmail.com?Subject=${bT.id}' target="_top">rosecityshopperUSA@gmail.com</a></p>
+
+
+    </b>`
+
+  };
+  transporter.sendMail(mailOptions, function(err,info){
+    if(err)
+      console.log(err)
+      else
+        console.log(info);
+  });
 });
 
 router.post('/emailAdmin', jsonParser, function(req,res){
@@ -59,14 +123,32 @@ router.post('/emailAdmin', jsonParser, function(req,res){
           <p>Under Construction...please look at mLab for now</p>
 
         </ul>
-        <h3>Where we will be shipping to</h3>
+        <h3>Where we will be shipping to:</h3>
         <ul>
           <li>Name: ${bT.shipping.firstName} ${bT.shipping.lastName}</li>
-          <li>Address: ${bT.shipping.streetAddress} ${bT.shipping.extendedAddress}</li>
+          <li>Address: ${bT.shipping.streetAddress}</li>
+          <li>Ext. Address: ${bT.shipping.extendedAddress}</li>
           <li>City/Locality: ${bT.shipping.locality}</li>
           <li>State/Region: ${bT.shipping.region}</li>
           <li>Zipcode: ${bT.shipping.postalCode}</li>
           <li>Country: ${bT.shipping.countryName}</li>
+        </ul>
+        <h3>Who we billed:</h3>
+        <ul>
+          <li>Name: ${bT.billing.firstName} ${bT.billing.lastName}</li>
+          <li>Address: ${bT.billing.streetAddress}</li>
+          <li>Ext. Address: ${bT.billing.extendedAddress}</li>
+          <li>City/Locality: ${bT.billing.locality}</li>
+          <li>State/Region: ${bT.billing.region}</li>
+          <li>Zipcode: ${bT.billing.postalCode}</li>
+          <li>Country: ${bT.billing.countryName}</li>
+        </ul>
+        <h3>Money Details</h3>
+        <ul>
+          <li>Cost of Product(s): ${bT.customFields.itemCost} ${bT.currencyIsoCode}</li>
+          <li>Shipping Method Cost: ${bT.customFields.shippingMethodCost} ${bT.currencyIsoCode}</li>
+          <li>Service Fees: ${bT.customFields.serviceFees} ${bT.currencyIsoCode}</li>
+          <li>GRAND TOTAL: ${bT.amount} ${bT.currencyIsoCode}</li>
         </ul>
     </b>`
 
